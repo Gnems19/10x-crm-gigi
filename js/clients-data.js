@@ -33,7 +33,7 @@ function mapApiUserToClient(user) {
 }
 
 function formatDealValue(value) {
-  return `$${Number(value).toLocaleString('en-US')}`;
+  return `$${Number(value || 0).toLocaleString('en-US')}`;
 }
 
 function statusBadgeClass(status) {
