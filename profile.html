@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile — 10X CRM</title>
+    <link rel="stylesheet" href="css/variables.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/pages.css" />
+  </head>
+  <body class="theme-dark">
+    <div class="app-layout">
+      <aside class="sidebar">
+        <a href="dashboard.html" class="brand">10X CRM</a>
+        <nav class="sidebar-nav">
+          <a href="dashboard.html" data-nav="dashboard">Dashboard</a>
+          <a href="clients.html" data-nav="clients">Clients</a>
+          <a href="profile.html" data-nav="profile">Profile</a>
+        </nav>
+        <div class="sidebar-actions">
+          <button type="button" class="btn btn-ghost" data-theme-toggle>Light</button>
+          <button type="button" class="btn btn-ghost" data-logout>Logout</button>
+        </div>
+      </aside>
+      <main class="main-content">
+        <div class="page-header">
+          <h1>Profile</h1>
+        </div>
+
+        <div class="profile-grid">
+          <section class="section-block">
+            <div class="profile-info">
+              <div class="avatar-initials" id="profile-initials">?</div>
+              <div>
+                <h2 id="profile-name">—</h2>
+                <p id="profile-email" style="margin: 0; color: var(--text-muted)"></p>
+                <p id="profile-company" style="margin: 0.25rem 0 0; color: var(--text-muted)"></p>
+                <p id="profile-member-since" style="margin: 0.35rem 0 0; color: var(--text-muted)"></p>
+              </div>
+            </div>
+          </section>
+
+          <section class="section-block">
+            <h2>Edit profile</h2>
+            <form id="profile-form" novalidate>
+              <div class="form-group">
+                <label for="edit-fullName">Full Name</label>
+                <input type="text" id="edit-fullName" name="fullName" />
+                <span class="field-error" id="edit-fullName-error"></span>
+              </div>
+              <div class="form-group">
+                <label for="edit-company">Company</label>
+                <input type="text" id="edit-company" name="company" />
+                <span class="field-error" id="edit-company-error"></span>
+              </div>
+              <button type="submit" class="btn btn-primary btn-inline">Save Changes</button>
+            </form>
+          </section>
+
+          <section class="section-block">
+            <h2>Change password</h2>
+            <form id="password-form" novalidate>
+              <div class="form-group">
+                <label for="currentPassword">Current Password</label>
+                <input type="password" id="currentPassword" name="currentPassword" />
+                <span class="field-error" id="currentPassword-error"></span>
+              </div>
+              <div class="form-group">
+                <label for="newPassword">New Password</label>
+                <input type="password" id="newPassword" name="newPassword" />
+                <span class="field-error" id="newPassword-error"></span>
+              </div>
+              <div class="form-group">
+                <label for="confirmPassword">Confirm New Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" />
+                <span class="field-error" id="confirmPassword-error"></span>
+              </div>
+              <button type="submit" class="btn btn-primary btn-inline">Change Password</button>
+            </form>
+          </section>
+
+          <section class="section-block danger-zone">
+            <h2>Data management</h2>
+            <p>
+              Reset CRM client data and reload the default list from the API. Your account and
+              session stay intact.
+            </p>
+            <button type="button" class="btn btn-danger" id="reset-data">Reset CRM Data</button>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/toast.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/guard.js"></script>
+    <script src="js/nav.js"></script>
+    <script src="js/clients-data.js"></script>
+    <script src="js/profile.js"></script>
+  </body>
+</html>
