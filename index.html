@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Log In — 10X CRM</title>
+    <link rel="stylesheet" href="css/variables.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/pages.css" />
+  </head>
+  <body class="theme-dark">
+    <div class="auth-page">
+      <div class="auth-card">
+        <span class="auth-brand">10X CRM</span>
+        <h1>Welcome back</h1>
+        <form id="login-form" novalidate>
+          <p class="form-error" id="login-global-error"></p>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" id="email" name="email" autocomplete="email" />
+            <span class="field-error" id="email-error"></span>
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" autocomplete="current-password" />
+            <span class="field-error" id="password-error"></span>
+          </div>
+          <button type="submit" class="btn btn-primary">Log In</button>
+        </form>
+        <p class="auth-footer">
+          Don't have an account? <a href="signup.html">Sign up</a>
+        </p>
+      </div>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/toast.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/guard.js"></script>
+    <script src="js/login.js"></script>
+  </body>
+</html>
