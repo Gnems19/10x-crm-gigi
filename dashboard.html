@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard — 10X CRM</title>
+    <link rel="stylesheet" href="css/variables.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/pages.css" />
+  </head>
+  <body class="theme-dark">
+    <div class="app-layout">
+      <aside class="sidebar">
+        <a href="dashboard.html" class="brand">10X CRM</a>
+        <nav class="sidebar-nav">
+          <a href="dashboard.html" data-nav="dashboard">Dashboard</a>
+          <a href="clients.html" data-nav="clients">Clients</a>
+          <a href="profile.html" data-nav="profile">Profile</a>
+        </nav>
+        <div class="sidebar-actions">
+          <button type="button" class="btn btn-ghost" data-theme-toggle>Light</button>
+          <button type="button" class="btn btn-ghost" data-logout>Logout</button>
+        </div>
+      </aside>
+      <main class="main-content" id="dashboard-body">
+        <div class="welcome-bar">
+          <h1>Welcome back, <span id="welcome-name">...</span>!</h1>
+          <div class="live-clock" id="live-clock"></div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="label">Total Clients</div>
+            <div class="value" id="stat-total">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Active Deals</div>
+            <div class="value" id="stat-active">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Won Revenue</div>
+            <div class="value" id="stat-revenue">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">New This Week</div>
+            <div class="value" id="stat-new">—</div>
+          </div>
+        </div>
+
+        <section class="section-block">
+          <h2>Pipeline Overview</h2>
+          <div class="pipeline-row">
+            <div class="pipeline-item">
+              <span class="count" id="pipe-lead">0</span>
+              <span class="label">Lead</span>
+            </div>
+            <div class="pipeline-item">
+              <span class="count" id="pipe-contacted">0</span>
+              <span class="label">Contacted</span>
+            </div>
+            <div class="pipeline-item">
+              <span class="count" id="pipe-won">0</span>
+              <span class="label">Won</span>
+            </div>
+            <div class="pipeline-item">
+              <span class="count" id="pipe-lost">0</span>
+              <span class="label">Lost</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-block">
+          <h2>Recent Clients</h2>
+          <ul class="recent-list" id="recent-clients"></ul>
+          <div class="section-footer">
+            <a href="clients.html">View all clients →</a>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/toast.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/guard.js"></script>
+    <script src="js/nav.js"></script>
+    <script src="js/clients-data.js"></script>
+    <script src="js/dashboard.js"></script>
+  </body>
+</html>
