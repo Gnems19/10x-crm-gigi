@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up — 10X CRM</title>
+    <link rel="stylesheet" href="css/variables.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/pages.css" />
+  </head>
+  <body class="theme-dark">
+    <div class="auth-page">
+      <div class="auth-card">
+        <span class="auth-brand">10X CRM</span>
+        <h1>Create your account</h1>
+        <form id="signup-form" novalidate>
+          <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" name="fullName" autocomplete="name" />
+            <span class="field-error" id="fullName-error"></span>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" id="email" name="email" autocomplete="email" />
+            <span class="field-error" id="email-error"></span>
+          </div>
+          <div class="form-group">
+            <label for="company">Company</label>
+            <input
+              type="text"
+              id="company"
+              name="company"
+              placeholder="Company (optional)"
+              autocomplete="organization"
+            />
+            <span class="field-error" id="company-error"></span>
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" autocomplete="new-password" />
+            <span class="field-error" id="password-error"></span>
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              autocomplete="new-password"
+            />
+            <span class="field-error" id="confirmPassword-error"></span>
+          </div>
+          <button type="submit" class="btn btn-primary">Create Account</button>
+        </form>
+        <p class="auth-footer">
+          Already have an account? <a href="index.html">Log in</a>
+        </p>
+      </div>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/toast.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/guard.js"></script>
+    <script src="js/signup.js"></script>
+  </body>
+</html>
