@@ -297,6 +297,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    document.querySelectorAll('.modal-backdrop.open').forEach((backdrop) => {
+      backdrop.classList.remove('open');
+    });
+  });
+
   document.getElementById('add-client-form').addEventListener('submit', async (event) => {
     event.preventDefault();
     const form = event.target;
