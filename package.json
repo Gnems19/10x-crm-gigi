@@ -1,0 +1,10 @@
+{
+  "name": "10x-crm-gigi",
+  "private": true,
+  "version": "1.0.0",
+  "description": "10X CRM — vanilla JS static site",
+  "scripts": {
+    "dev": "npx --yes serve . -l 3000",
+    "start": "npx --yes serve . -l 3000"
+  }
+}

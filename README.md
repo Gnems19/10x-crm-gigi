@@ -25,14 +25,20 @@ A lightweight customer relationship management app for sales managers. Track cli
 ## How to Run
 
 1. Clone this repository.
-2. Open the project folder in a static file server, for example:
+2. From the project folder, start a local static server:
+
+```bash
+npm run dev
+```
+
+Or without npm scripts:
 
 ```bash
 npx serve .
 ```
 
-3. Visit the URL shown in the terminal (usually `http://localhost:3000`).
-4. Start at `index.html` (login). Create an account or use the test account below.
+3. Open `http://localhost:3000`.
+4. Start at the login page. Create an account or use the test account below.
 
 Opening HTML files directly via `file://` may block API calls in some browsers. Prefer a local static server.
 
