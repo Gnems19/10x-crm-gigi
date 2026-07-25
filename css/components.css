@@ -277,7 +277,16 @@ textarea:focus {
   min-height: 100vh;
 }
 
+/* The sidebar frames the viewport, not the page: it stays put while the
+   main column scrolls, so Logout and the theme toggle are always in reach. */
 .sidebar {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  height: 100dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   background: var(--sidebar-bg);
   color: #e8e8ef;
   padding: 1.5rem 1rem;
@@ -891,7 +900,12 @@ textarea:focus {
     grid-template-columns: 1fr;
   }
 
+  /* Stacked layout: the sidebar is a top bar, so it sticks by its own
+     height instead of filling the viewport. */
   .sidebar {
+    height: auto;
+    overflow: visible;
+    z-index: 20;
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
