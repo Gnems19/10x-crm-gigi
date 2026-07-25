@@ -4,6 +4,7 @@
  */
 const CLIENTS_API = 'https://dummyjson.com/users';
 const STATUSES = ['Lead', 'Contacted', 'Won', 'Lost'];
+const CLIENTS_SEED_COUNT = 60; // ~15 per status, enough to scroll on every filter
 
 let clientsState = [];
 
@@ -25,7 +26,12 @@ function mapApiUserToClient(user) {
     phone: user.phone || '',
     company,
     image: user.image || `https://dummyjson.com/icon/${encodeURIComponent(firstName || 'user')}/128`,
-    status: user.status && STATUSES.includes(user.status) ? user.status : 'Lead',
+    // The API has no status field, so spread the seeded clients evenly across
+    // the pipeline by id — every filter tab lands on a populated list.
+    status:
+      user.status && STATUSES.includes(user.status)
+        ? user.status
+        : STATUSES[(Number(user.id) || 0) % STATUSES.length],
     dealValue: typeof user.dealValue === 'number' ? user.dealValue : randomDealValue(),
     notes: Array.isArray(user.notes) ? user.notes : [],
     createdAt: user.createdAt || new Date().toISOString(),
@@ -71,7 +77,7 @@ async function loadClients() {
   }
 
   try {
-    const response = await fetch(`${CLIENTS_API}?limit=30`);
+    const response = await fetch(`${CLIENTS_API}?limit=${CLIENTS_SEED_COUNT}`);
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
     }

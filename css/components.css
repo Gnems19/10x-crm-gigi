@@ -613,8 +613,13 @@ textarea:focus {
   min-width: 180px;
 }
 
+/* Sized by its own longest option ("Deal value: high → low") rather than a
+   fixed basis, so the label never crowds the UA dropdown arrow. */
 .toolbar .sort-select {
-  flex: 0 1 190px;
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 100%;
+  padding-right: 1.15rem;
 }
 
 .filter-chips {
