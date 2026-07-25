@@ -8,10 +8,11 @@ const CLIENTS_SEED_COUNT = 60; // ~15 per status, enough to scroll on every filt
 
 let clientsState = [];
 
-function randomDealValue() {
-  return Math.floor(Math.random() * (10000 - 500 + 1)) + 500;
-}
-
+/**
+ * Shape one API user into a client record. Anything the API actually returns
+ * wins; the mock helpers only fill the gaps. Read each `||` as "real, or made
+ * up" — see mock.js.
+ */
 function mapApiUserToClient(user) {
   const firstName = user.firstName || '';
   const lastName = user.lastName || '';
@@ -25,16 +26,11 @@ function mapApiUserToClient(user) {
     email: user.email || '',
     phone: user.phone || '',
     company,
-    image: user.image || `https://dummyjson.com/icon/${encodeURIComponent(firstName || 'user')}/128`,
-    // The API has no status field, so spread the seeded clients evenly across
-    // the pipeline by id — every filter tab lands on a populated list.
-    status:
-      user.status && STATUSES.includes(user.status)
-        ? user.status
-        : STATUSES[(Number(user.id) || 0) % STATUSES.length],
-    dealValue: typeof user.dealValue === 'number' ? user.dealValue : randomDealValue(),
+    image: user.image || mockAvatarUrl(name),
+    status: user.status && STATUSES.includes(user.status) ? user.status : mockStatus(user.id),
+    dealValue: typeof user.dealValue === 'number' ? user.dealValue : mockDealValue(),
     notes: Array.isArray(user.notes) ? user.notes : [],
-    createdAt: user.createdAt || new Date().toISOString(),
+    createdAt: user.createdAt || mockCreatedAt(),
   };
 }
 
@@ -119,13 +115,11 @@ async function addClientViaApi(clientPayload) {
     email: clientPayload.email,
     phone: clientPayload.phone || '',
     company: clientPayload.company || '',
-    image:
-      data.image ||
-      `https://dummyjson.com/icon/${encodeURIComponent(clientPayload.name.split(' ')[0] || 'user')}/128`,
+    image: data.image || mockAvatarUrl(clientPayload.name),
     status: clientPayload.status || 'Lead',
     dealValue: clientPayload.dealValue,
     notes: [],
-    createdAt: new Date().toISOString(),
+    createdAt: new Date().toISOString(), // real: this client was added just now
   };
 
   clientsState.unshift(newClient);

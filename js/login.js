@@ -18,17 +18,6 @@ function setFieldError(input, message) {
   if (errorEl) errorEl.textContent = message;
 }
 
-async function ensureDemoUser() {
-  if (!findUserByEmail('demo@test.com')) {
-    await registerUser({
-      fullName: 'Demo User',
-      email: 'demo@test.com',
-      password: 'demo1234',
-      company: '10X Sales',
-    });
-  }
-}
-
 document.addEventListener('DOMContentLoaded', async () => {
   initTheme();
   if (!guardPage({ redirectIfAuth: true })) return;
