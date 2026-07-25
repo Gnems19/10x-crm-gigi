@@ -4,7 +4,7 @@
  */
 const CLIENTS_API = 'https://dummyjson.com/users';
 const STATUSES = ['Lead', 'Contacted', 'Won', 'Lost'];
-const CLIENTS_SEED_COUNT = 60; // ~15 per status, enough to scroll on every filter
+const CLIENTS_SEED_COUNT = 30;
 
 let clientsState = [];
 
@@ -27,7 +27,7 @@ function mapApiUserToClient(user) {
     phone: user.phone || '',
     company,
     image: user.image || mockAvatarUrl(name),
-    status: user.status && STATUSES.includes(user.status) ? user.status : mockStatus(user.id),
+    status: user.status && STATUSES.includes(user.status) ? user.status : 'Lead',
     dealValue: typeof user.dealValue === 'number' ? user.dealValue : mockDealValue(),
     notes: Array.isArray(user.notes) ? user.notes : [],
     createdAt: user.createdAt || mockCreatedAt(),
@@ -68,7 +68,10 @@ function setClientsState(clients) {
 async function loadClients() {
   const cached = getClients();
   if (Array.isArray(cached)) {
-    clientsState = cached;
+    // Save on the way in, not just on mutation. getClients() read this user's
+    // list out of the per-user map, but crm_clients could still be showing the
+    // previous account's — this writes the mirror back in step on every load.
+    setClientsState(cached);
     return { ok: true, clients: clientsState, fromCache: true };
   }
 
