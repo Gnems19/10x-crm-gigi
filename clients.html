@@ -56,11 +56,13 @@
             <button type="button" class="chip" data-filter="Won">Won</button>
             <button type="button" class="chip" data-filter="Lost">Lost</button>
           </div>
-          <select id="sort-select" class="sort-select" aria-label="Sort clients">
-            <option value="newest">Newest first</option>
-            <option value="name">Name A→Z</option>
-            <option value="deal">Deal value: high → low</option>
-          </select>
+          <div class="sort-select-frame">
+            <select id="sort-select" class="sort-select" aria-label="Sort clients">
+              <option value="newest">Newest first</option>
+              <option value="name">Name A→Z</option>
+              <option value="deal">Deal value: high → low</option>
+            </select>
+          </div>
         </div>
 
         <div id="clients-list"></div>

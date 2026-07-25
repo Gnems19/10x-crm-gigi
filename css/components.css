@@ -622,13 +622,34 @@ textarea:focus {
   min-width: 180px;
 }
 
-/* Sized by its own longest option ("Deal value: high → low") rather than a
-   fixed basis, so the label never crowds the UA dropdown arrow. */
-.toolbar .sort-select {
+/* The frame adds space after the browser's native downward arrow without
+   replacing or restyling it. */
+.toolbar .sort-select-frame {
   flex: 0 0 auto;
+  max-width: 100%;
+  padding-right: 0.45rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--input-bg);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.toolbar .sort-select-frame:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.toolbar .sort-select {
   width: auto;
   max-width: 100%;
-  padding-right: 1.15rem;
+  padding-right: 0.9rem;
+  padding-left: 0.9rem;
+  border: 0;
+  background-color: transparent;
+}
+
+.toolbar .sort-select:focus {
+  box-shadow: none;
 }
 
 .filter-chips {
