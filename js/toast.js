@@ -2,6 +2,9 @@
  * Global toast / snack messages. No alert() for notifications.
  * Auto-dismisses after 3 seconds; X button also closes.
  */
+const TOAST_VISIBLE_MS = 3000;
+const TOAST_FADE_MS = 200; // must match the .toast-hiding transition in CSS
+
 function ensureToastContainer() {
   let el = document.getElementById('toast-container');
   if (!el) {
@@ -29,9 +32,11 @@ function showToast(message, type = 'success') {
   closeBtn.setAttribute('aria-label', 'Close');
   closeBtn.textContent = '×';
 
+  let autoDismiss;
   const remove = () => {
+    clearTimeout(autoDismiss); // closing by hand cancels the pending auto-dismiss
     toast.classList.add('toast-hiding');
-    setTimeout(() => toast.remove(), 200);
+    setTimeout(() => toast.remove(), TOAST_FADE_MS);
   };
 
   closeBtn.addEventListener('click', remove);
@@ -39,5 +44,5 @@ function showToast(message, type = 'success') {
   toast.appendChild(closeBtn);
   container.appendChild(toast);
 
-  setTimeout(remove, 3000);
+  autoDismiss = setTimeout(remove, TOAST_VISIBLE_MS);
 }

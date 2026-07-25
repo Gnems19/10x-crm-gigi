@@ -68,26 +68,26 @@ document.addEventListener('DOMContentLoaded', () => {
     clearFormErrors(form);
 
     const currentUser = getCurrentUser();
+    if (!currentUser) {
+      logoutUser();
+      return;
+    }
+
     const currentPassword = form.currentPassword.value;
     const newPassword = form.newPassword.value;
     const confirmPassword = form.confirmPassword.value;
     let valid = true;
 
-    // The stored hash cannot be read back, so the old password is checked by
-    // re-deriving it rather than by comparing strings.
-    const currentMatches = await verifyStoredPassword(currentUser, currentPassword);
-    if (!currentMatches) {
-      setFieldError(form.currentPassword, 'Current password is incorrect');
-      valid = false;
-    }
-
+    // Cheap string checks first. Verifying the old password costs 210,000
+    // PBKDF2 iterations, and there is no point paying that to reject a form
+    // that was already going to fail.
     if (!isValidPassword(newPassword)) {
       setFieldError(
         form.newPassword,
         'Password must be at least 8 characters and contain a letter and a number'
       );
       valid = false;
-    } else if (currentMatches && newPassword === currentPassword) {
+    } else if (newPassword === currentPassword) {
       setFieldError(
         form.newPassword,
         'New password must be different from the current one'
@@ -101,6 +101,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (!valid) return;
+
+    // Only now pay for the hash. The stored hash cannot be read back, so the
+    // old password is checked by re-deriving it rather than by comparing.
+    const currentMatches = await verifyStoredPassword(currentUser, currentPassword);
+    if (!currentMatches) {
+      setFieldError(form.currentPassword, 'Current password is incorrect');
+      return;
+    }
 
     await updateUserPassword(currentUser.id, newPassword);
     form.reset();

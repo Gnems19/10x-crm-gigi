@@ -110,7 +110,11 @@ async function addClientViaApi(clientPayload) {
 
   const data = await response.json();
   const newClient = {
-    id: data.id != null ? data.id : Date.now(),
+    // DummyJSON is simulated — /users/add echoes back id 209 every single time,
+    // so trusting it would give every added client the same id, and deleting
+    // one would delete them all. Ids are ours. Numeric, because the click
+    // handlers read them back through Number(dataset.id).
+    id: Date.now(),
     name: clientPayload.name,
     email: clientPayload.email,
     phone: clientPayload.phone || '',

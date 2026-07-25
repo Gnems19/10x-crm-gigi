@@ -72,7 +72,7 @@ function renderClients(list) {
 
     card.innerHTML = `
       <div class="client-card-top">
-        <img class="client-avatar" src="${client.image}" alt="" data-avatar />
+        <img class="client-avatar" src="${escapeHtml(client.image)}" alt="" data-avatar />
         <div class="client-meta">
           <h3>${escapeHtml(client.name)}</h3>
           <p>${escapeHtml(client.company || '—')}</p>
@@ -126,7 +126,8 @@ function escapeHtml(str) {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 function refreshList() {
@@ -221,7 +222,7 @@ function openDetailModal(clientId) {
 
   body.innerHTML = `
     <div class="client-card-top">
-      <img class="client-avatar" src="${client.image}" alt="" id="detail-avatar" />
+      <img class="client-avatar" src="${escapeHtml(client.image)}" alt="" id="detail-avatar" />
       <div class="client-meta">
         <h3>${escapeHtml(client.name)}</h3>
         <p>${escapeHtml(client.company || '—')}</p>

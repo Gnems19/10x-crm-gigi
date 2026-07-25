@@ -88,10 +88,18 @@ function getJSON(key, fallback = null) {
 /**
  * @param {string} key
  * @param {*} value Must be JSON-serializable.
- * @returns {void}
+ * @returns {boolean} False when the write was rejected — see the catch.
  */
 function setJSON(key, value) {
-  localStorage.setItem(key, JSON.stringify(value));
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+    return true;
+  } catch (error) {
+    // Quota exceeded, or storage blocked outright (Safari private browsing).
+    // Nothing gets saved, but the page shouldn't die halfway through a flow.
+    console.warn(`Could not save ${key}:`, error);
+    return false;
+  }
 }
 
 /**

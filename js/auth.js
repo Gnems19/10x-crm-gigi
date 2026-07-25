@@ -49,7 +49,10 @@ async function registerUser({ fullName, email, password, company }) {
  * stops existing. Nobody has to re-register.
  */
 async function verifyStoredPassword(user, password) {
-  if (user.passwordHash) {
+  // Check the shape, not just truthiness: a malformed passwordHash left over
+  // from an older build is still truthy, and would take this branch and fail
+  // forever instead of falling through to the migration below.
+  if (user.passwordHash && user.passwordHash.salt && user.passwordHash.hash) {
     return verifyPassword(password, user.passwordHash);
   }
 
