@@ -1,53 +1,104 @@
+/* ---------------------------------------------------------------
+   10X CRM — design tokens
+   Palette and shapes mirror the 10x brand (10x.edu.ge):
+   signature purple #7250fc, near-black canvas, near-square corners.
+   --------------------------------------------------------------- */
+
 :root {
-  --font-sans: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  --radius: 10px;
-  --radius-sm: 6px;
-  --shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
-  --transition: 160ms ease;
+  /* Type: Tektur carries the angular 10x display voice,
+     Plex Sans reads cleanly at UI sizes, Plex Mono for figures. */
+  --font-display: "Tektur", "Segoe UI", Impact, sans-serif;
+  --font-sans: "IBM Plex Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", "Cascadia Code", Consolas, monospace;
+
+  /* The brand corner: sharp, not pill. */
+  --radius: 2px;
+  --radius-sm: 2px;
+
+  --transition: 160ms cubic-bezier(0.2, 0, 0, 1);
+
+  /* Brand purple is constant across both themes. */
+  --brand: #7250fc;
+  --brand-bright: #8a6dff;
 }
 
+/* ----------------------------- dark ----------------------------- */
 body.theme-dark {
-  --bg: #0f1419;
-  --bg-elevated: #1a222d;
-  --bg-muted: #243040;
-  --border: #2e3d4f;
-  --text: #e8eef5;
-  --text-muted: #9aabbd;
-  --accent: #3d9cf0;
-  --accent-hover: #5aaff7;
-  --success: #2f9e6b;
-  --success-bg: rgba(47, 158, 107, 0.15);
-  --danger: #e35d6a;
-  --danger-bg: rgba(227, 93, 106, 0.15);
-  --warning: #d4a017;
-  --lead: #3d9cf0;
-  --contacted: #c9a227;
-  --won: #2f9e6b;
-  --lost: #e35d6a;
-  --input-bg: #121820;
-  --sidebar-bg: #121820;
-  --card-bg: #1a222d;
+  --bg: #000000;
+  --bg-elevated: #0d0d11;
+  --bg-muted: #17171d;
+  --border: #26262f;
+  --border-strong: #3a3a47;
+
+  --text: #ffffff;
+  --text-muted: #8f8f9e;
+
+  --accent: #7250fc;
+  --accent-hover: #8a6dff;
+  --accent-soft: rgba(114, 80, 252, 0.16);
+  --accent-contrast: #ffffff;
+
+  --success: #44b295;
+  --success-bg: rgba(68, 178, 149, 0.14);
+  --danger: #ed1e78;
+  --danger-bg: rgba(237, 30, 120, 0.14);
+  --warning: #fcd451;
+
+  /* Pipeline stages use the 10x accent family, not stock traffic lights. */
+  --lead: #509ffc;
+  --lead-bg: rgba(80, 159, 252, 0.14);
+  --contacted: #fcb750;
+  --contacted-bg: rgba(252, 183, 80, 0.14);
+  --won: #44b295;
+  --won-bg: rgba(68, 178, 149, 0.14);
+  --lost: #ed1e78;
+  --lost-bg: rgba(237, 30, 120, 0.14);
+
+  --input-bg: #0d0d11;
+  --sidebar-bg: #060608;
+  --card-bg: #0d0d11;
+
+  --shadow: 0 18px 50px rgba(0, 0, 0, 0.7);
+  --grid-line: rgba(255, 255, 255, 0.035);
+  --glow: rgba(114, 80, 252, 0.35);
 }
 
+/* ----------------------------- light ---------------------------- */
 body.theme-light {
-  --bg: #f0f3f7;
+  --bg: #f4f4f6;
   --bg-elevated: #ffffff;
-  --bg-muted: #e4eaf1;
-  --border: #cfd8e3;
-  --text: #1a2430;
-  --text-muted: #5c6b7a;
-  --accent: #1f6fb8;
-  --accent-hover: #185a96;
-  --success: #1f7a52;
-  --success-bg: rgba(31, 122, 82, 0.12);
-  --danger: #c0392b;
-  --danger-bg: rgba(192, 57, 43, 0.1);
-  --warning: #b8860b;
-  --lead: #1f6fb8;
-  --contacted: #b8860b;
-  --won: #1f7a52;
-  --lost: #c0392b;
+  --bg-muted: #ececf1;
+  --border: #d9d9e2;
+  --border-strong: #b9b9c8;
+
+  --text: #231f20;
+  --text-muted: #6b6b7b;
+
+  --accent: #5b35f5;
+  --accent-hover: #4a25e6;
+  --accent-soft: rgba(114, 80, 252, 0.12);
+  --accent-contrast: #ffffff;
+
+  --success: #24725f;
+  --success-bg: rgba(36, 114, 95, 0.12);
+  --danger: #ce2a4c;
+  --danger-bg: rgba(206, 42, 76, 0.1);
+  --warning: #a8760a;
+
+  --lead: #0f5fc4;
+  --lead-bg: rgba(15, 95, 196, 0.1);
+  --contacted: #a8760a;
+  --contacted-bg: rgba(168, 118, 10, 0.12);
+  --won: #24725f;
+  --won-bg: rgba(36, 114, 95, 0.12);
+  --lost: #ce2a4c;
+  --lost-bg: rgba(206, 42, 76, 0.1);
+
   --input-bg: #ffffff;
-  --sidebar-bg: #1a2430;
+  --sidebar-bg: #0d0d11;
   --card-bg: #ffffff;
+
+  --shadow: 0 16px 40px rgba(35, 31, 32, 0.12);
+  --grid-line: rgba(35, 31, 32, 0.04);
+  --glow: rgba(114, 80, 252, 0.25);
 }

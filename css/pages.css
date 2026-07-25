@@ -1,12 +1,9 @@
 /* Page-specific tweaks kept small; most styles live in components.css */
 
 .auth-brand {
-  display: block;
-  text-align: center;
-  font-weight: 700;
-  font-size: 1.1rem;
-  margin-bottom: 0.75rem;
-  color: var(--text);
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.75rem;
 }
 
 .btn-inline {
@@ -23,5 +20,5 @@
 
 .danger-zone p {
   color: var(--text-muted);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }

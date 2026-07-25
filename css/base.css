@@ -13,14 +13,22 @@ body {
 
 body {
   font-family: var(--font-sans);
-  background: var(--bg);
+  background-color: var(--bg);
+  /* Faint engineering grid — atmosphere without noise. */
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 64px 64px;
   color: var(--text);
-  line-height: 1.5;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color var(--transition), color var(--transition);
 }
 
 a {
   color: var(--accent);
   text-decoration: none;
+  transition: color var(--transition);
 }
 
 a:hover {
@@ -43,13 +51,74 @@ textarea {
 h1,
 h2,
 h3 {
+  font-family: var(--font-display);
   margin: 0 0 0.5rem;
-  font-weight: 650;
-  line-height: 1.25;
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+
+h1 {
+  font-size: 1.75rem;
 }
 
 p {
   margin: 0 0 1rem;
+}
+
+::selection {
+  background: var(--brand);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Figures read as data, not prose. */
+.mono,
+.live-clock,
+.stat-card .value,
+.pipeline-item .count,
+.deal-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- 10X wordmark -------------------------------------------------
+   The mark ships two layers: a fixed purple bar and letterforms that
+   inherit the surrounding text colour, so it flips with the theme. */
+.logo-10x {
+  display: block;
+  height: auto;
+  flex-shrink: 0;
+}
+
+.logo-10x .fill-foreground {
+  fill: currentColor;
+}
+
+.brand-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--text);
+}
+
+.brand-lockup:hover {
+  color: var(--text);
+}
+
+.brand-lockup .brand-suffix {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding-left: 0.6rem;
+  border-left: 1px solid var(--border-strong);
+  line-height: 1;
 }
 
 .sr-only {
@@ -61,4 +130,14 @@ p {
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
