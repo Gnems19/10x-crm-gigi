@@ -44,8 +44,7 @@ Opening HTML files directly via `file://` may block API calls in some browsers. 
 
 ## Live Demo
 
-<!-- Update after deploy -->
-**Live URL:** _(pending Vercel deploy — will be added here)_
+**Live URL:** [https://10x-crm-gigi.vercel.app/](https://10x-crm-gigi.vercel.app/)
 
 ## Test Account
 
