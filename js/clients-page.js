@@ -170,6 +170,49 @@ function closeModal(id) {
   document.getElementById(id).classList.remove('open');
 }
 
+/* ---- Phone -------------------------------------------------------
+   Phone numbers are digits plus punctuation — never letters. Typing is
+   filtered as it happens, and the shape is checked again on submit. */
+
+/** Everything a phone number is allowed to be made of. */
+const PHONE_ALLOWED = /[^\d+\-\s().]/g;
+
+/**
+ * Digit groups, optionally bracketed, joined by a single space, dash or dot,
+ * after an optional leading +. Matches "+81 965-431-3024", "(555) 010-9999"
+ * and "+995555123456"; rejects "555--0101" and anything with a letter.
+ */
+const PHONE_SHAPE = /^\+?(?:\(\d+\)|\d+)(?:[\s.-]?(?:\(\d+\)|\d+))*$/;
+
+/** Strips anything that can't be in a phone number, as the user types. */
+function attachPhoneFilter(input) {
+  input.addEventListener('input', () => {
+    const cleaned = input.value
+      .replace(PHONE_ALLOWED, '')
+      .replace(/(?!^)\+/g, ''); // a + only makes sense as a country prefix
+    if (cleaned === input.value) return;
+    // Keep the caret where the user left it instead of jumping to the end.
+    const caret = Math.max(0, input.selectionStart - (input.value.length - cleaned.length));
+    input.value = cleaned;
+    input.setSelectionRange(caret, caret);
+  });
+}
+
+/** @returns {string} Error message, or '' when the number is acceptable. */
+function phoneError(phone) {
+  const value = phone.trim();
+  if (!value) return ''; // phone stays optional
+
+  if (!PHONE_SHAPE.test(value)) {
+    return 'Use digits only, with + - ( ) . or spaces';
+  }
+
+  const digits = value.replace(/\D/g, '');
+  if (digits.length < 7) return 'Phone number looks too short';
+  if (digits.length > 15) return 'Phone number looks too long';
+  return '';
+}
+
 function validateAddClientForm(form) {
   clearFormErrors(form);
   const name = form.name.value;
@@ -193,8 +236,9 @@ function validateAddClientForm(form) {
     valid = false;
   }
 
-  if (phone.trim() && phone.trim().length < 6) {
-    setFieldError(form.phone, 'Phone number looks too short');
+  const phoneMessage = phoneError(phone);
+  if (phoneMessage) {
+    setFieldError(form.phone, phoneMessage);
     valid = false;
   }
 
@@ -304,6 +348,8 @@ document.addEventListener('DOMContentLoaded', () => {
       backdrop.classList.remove('open');
     });
   });
+
+  attachPhoneFilter(document.getElementById('phone'));
 
   document.getElementById('add-client-form').addEventListener('submit', async (event) => {
     event.preventDefault();
