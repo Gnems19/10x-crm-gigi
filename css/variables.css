@@ -24,6 +24,10 @@
 
 /* ----------------------------- dark ----------------------------- */
 body.theme-dark {
+  /* Tells the browser to draw its own chrome — dropdown popups,
+     scrollbars, autofill, spinners — in the matching palette. */
+  color-scheme: dark;
+
   --bg: #000000;
   --bg-elevated: #0d0d11;
   --bg-muted: #17171d;
@@ -65,6 +69,8 @@ body.theme-dark {
 
 /* ----------------------------- light ---------------------------- */
 body.theme-light {
+  color-scheme: light;
+
   --bg: #f4f4f6;
   --bg-elevated: #ffffff;
   --bg-muted: #ececf1;

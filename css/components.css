@@ -57,29 +57,43 @@
   color: var(--text-muted);
 }
 
+/* Themed at the element level, not via a wrapper class: a control that
+   lives outside .form-group (the in-card status select, anything added
+   later) must not fall back to the UA's white box under white text. */
+input,
+select,
+textarea {
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--input-bg);
+  color: var(--text);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+/* The open dropdown list is drawn by the OS; give it the theme too. */
+option,
+optgroup {
+  background: var(--input-bg);
+  color: var(--text);
+}
+
 .form-group input,
 .form-group select,
 .form-group textarea,
 .toolbar input,
 .toolbar select {
   width: 100%;
-  padding: 0.7rem 0.8rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--input-bg);
-  transition: border-color var(--transition), box-shadow var(--transition);
 }
 
-.form-group input::placeholder,
-.toolbar input::placeholder {
+input::placeholder,
+textarea::placeholder {
   color: var(--text-muted);
 }
 
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus,
-.toolbar input:focus,
-.toolbar select:focus {
+input:focus,
+select:focus,
+textarea:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-soft);
