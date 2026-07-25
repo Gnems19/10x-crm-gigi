@@ -60,16 +60,28 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!guardPage({ redirectIfAuth: true })) return;
 
   const form = document.getElementById('signup-form');
-  form.addEventListener('submit', (event) => {
+  form.addEventListener('submit', async (event) => {
     event.preventDefault();
     if (!validateSignupForm(form)) return;
 
-    registerUser({
-      fullName: form.fullName.value,
-      email: form.email.value,
-      password: form.password.value,
-      company: form.company.value,
-    });
+    const submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+
+    try {
+      await registerUser({
+        fullName: form.fullName.value,
+        email: form.email.value,
+        password: form.password.value,
+        company: form.company.value,
+      });
+    } catch {
+      showToast(
+        'Could not create the account securely. Open this page over https:// or localhost.',
+        'error'
+      );
+      submitBtn.disabled = false;
+      return;
+    }
 
     showToast('Account created successfully! Please log in.', 'success');
     setTimeout(() => {

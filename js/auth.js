@@ -28,13 +28,13 @@ function getCurrentUser() {
   return users.find((user) => user.id === session.userId) || null;
 }
 
-function registerUser({ fullName, email, password, company }) {
+async function registerUser({ fullName, email, password, company }) {
   const users = getUsers();
   const user = {
     id: Date.now(),
     fullName: fullName.trim(),
     email: email.trim().toLowerCase(),
-    password,
+    passwordHash: await createPasswordRecord(password),
     company: (company || '').trim(),
     createdAt: new Date().toISOString(),
   };
@@ -43,11 +43,36 @@ function registerUser({ fullName, email, password, company }) {
   return user;
 }
 
-function loginUser(email, password) {
+/**
+ * Accounts created before hashing stored a plaintext `password`. Those verify
+ * against the old field once, then get rewritten as a hash so the plaintext
+ * stops existing. Nobody has to re-register.
+ */
+async function verifyStoredPassword(user, password) {
+  if (user.passwordHash) {
+    return verifyPassword(password, user.passwordHash);
+  }
+
+  if (typeof user.password === 'string') {
+    if (user.password !== password) return false;
+    await updateUserPassword(user.id, password);
+    return true;
+  }
+
+  return false;
+}
+
+async function loginUser(email, password) {
   const user = findUserByEmail(email);
-  if (!user || user.password !== password) {
+  if (!user) {
     return { ok: false };
   }
+
+  const matched = await verifyStoredPassword(user, password);
+  if (!matched) {
+    return { ok: false };
+  }
+
   const session = {
     userId: user.id,
     email: user.email,
@@ -72,11 +97,12 @@ function updateUserProfile(userId, { fullName, company }) {
   return user;
 }
 
-function updateUserPassword(userId, newPassword) {
+async function updateUserPassword(userId, newPassword) {
   const users = getUsers();
   const user = users.find((u) => u.id === userId);
   if (!user) return null;
-  user.password = newPassword;
+  user.passwordHash = await createPasswordRecord(newPassword);
+  delete user.password; // drop any legacy plaintext left on the record
   setUsers(users);
   return user;
 }

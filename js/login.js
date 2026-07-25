@@ -18,9 +18,9 @@ function setFieldError(input, message) {
   if (errorEl) errorEl.textContent = message;
 }
 
-function ensureDemoUser() {
+async function ensureDemoUser() {
   if (!findUserByEmail('demo@test.com')) {
-    registerUser({
+    await registerUser({
       fullName: 'Demo User',
       email: 'demo@test.com',
       password: 'demo1234',
@@ -29,13 +29,24 @@ function ensureDemoUser() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   initTheme();
   if (!guardPage({ redirectIfAuth: true })) return;
-  ensureDemoUser();
+
+  const globalError = document.getElementById('login-global-error');
+
+  if (!isCryptoAvailable()) {
+    if (globalError) {
+      globalError.textContent =
+        'Secure login needs HTTPS. Open this page over https:// or localhost.';
+    }
+    return;
+  }
+
+  await ensureDemoUser();
 
   const form = document.getElementById('login-form');
-  form.addEventListener('submit', (event) => {
+  form.addEventListener('submit', async (event) => {
     event.preventDefault();
     clearLoginErrors(form);
 
@@ -55,15 +66,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (hasFieldError) return;
 
-    const result = loginUser(email, password);
-    if (!result.ok) {
-      const globalError = document.getElementById('login-global-error');
-      if (globalError) {
-        globalError.textContent = 'Invalid email or password';
-      }
-      return;
-    }
+    const submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
 
-    window.location.href = 'dashboard.html';
+    try {
+      const result = await loginUser(email, password);
+      if (!result.ok) {
+        if (globalError) {
+          globalError.textContent = 'Invalid email or password';
+        }
+        return;
+      }
+      window.location.href = 'dashboard.html';
+    } finally {
+      submitBtn.disabled = false;
+    }
   });
 });

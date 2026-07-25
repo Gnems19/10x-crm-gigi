@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     showToast('Profile updated ✓', 'success');
   });
 
-  document.getElementById('password-form').addEventListener('submit', (event) => {
+  document.getElementById('password-form').addEventListener('submit', async (event) => {
     event.preventDefault();
     const form = event.target;
     clearFormErrors(form);
@@ -73,7 +73,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmPassword = form.confirmPassword.value;
     let valid = true;
 
-    if (currentPassword !== currentUser.password) {
+    // The stored hash cannot be read back, so the old password is checked by
+    // re-deriving it rather than by comparing strings.
+    const currentMatches = await verifyStoredPassword(currentUser, currentPassword);
+    if (!currentMatches) {
       setFieldError(form.currentPassword, 'Current password is incorrect');
       valid = false;
     }
@@ -84,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'Password must be at least 8 characters and contain a letter and a number'
       );
       valid = false;
-    } else if (newPassword === currentUser.password) {
+    } else if (currentMatches && newPassword === currentPassword) {
       setFieldError(
         form.newPassword,
         'New password must be different from the current one'
@@ -99,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!valid) return;
 
-    updateUserPassword(currentUser.id, newPassword);
+    await updateUserPassword(currentUser.id, newPassword);
     form.reset();
     showToast('Password changed ✓', 'success');
   });
