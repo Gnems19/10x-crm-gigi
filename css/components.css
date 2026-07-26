@@ -344,6 +344,13 @@ textarea:focus {
   background: var(--brand);
 }
 
+/* A pass-through wrapper: the nav and the actions stay siblings of the
+   brand so each layout can place them independently — side by side in the
+   desktop rail, split between the two mobile bars. */
+.sidebar-menu {
+  display: contents;
+}
+
 .sidebar-actions {
   margin-top: auto;
   display: flex;
@@ -381,6 +388,16 @@ textarea:focus {
 
 .page-header h1 {
   margin: 0;
+}
+
+/* The per-page button slot. The mobile shell owns both viewport edges, so
+   this row — not the header bar — is where a page puts its own actions;
+   it stays a single 44px row on phones however many buttons land in it. */
+.page-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 /* ===== Badges ===================================================== */
@@ -782,6 +799,8 @@ textarea:focus {
 }
 
 .pipeline-item {
+  display: flex;
+  flex-direction: column;
   background: var(--bg-muted);
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
@@ -795,6 +814,9 @@ textarea:focus {
 }
 
 .pipeline-item .count {
+  /* Markup order is label → bar → count so the bar layout reads in source
+     order on phones; the tile puts the figure back on top. */
+  order: -1;
   font-size: 1.5rem;
   font-weight: 600;
   display: block;
@@ -809,11 +831,33 @@ textarea:focus {
   text-transform: uppercase;
 }
 
+/* The bar only carries the comparison in the stacked mobile layout —
+   as a tile, the figure already does that job. */
+.pipeline-item .bar {
+  display: none;
+  height: 8px;
+  background: var(--bg-muted);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.pipeline-item .bar-fill {
+  display: block;
+  height: 100%;
+  width: 0;
+  transition: width var(--transition);
+}
+
 /* Tint each stage with its own accent. */
 .pipeline-item:nth-child(1) .count { color: var(--lead); }
 .pipeline-item:nth-child(2) .count { color: var(--contacted); }
 .pipeline-item:nth-child(3) .count { color: var(--won); }
 .pipeline-item:nth-child(4) .count { color: var(--lost); }
+
+.pipeline-item:nth-child(1) .bar-fill { background: var(--lead); }
+.pipeline-item:nth-child(2) .bar-fill { background: var(--contacted); }
+.pipeline-item:nth-child(3) .bar-fill { background: var(--won); }
+.pipeline-item:nth-child(4) .bar-fill { background: var(--lost); }
 
 .recent-list {
   list-style: none;
@@ -821,9 +865,11 @@ textarea:focus {
   padding: 0;
 }
 
+/* Two columns here, three once the avatar joins in the mobile shell —
+   a hidden grid item takes no track, so the count has to match. */
 .recent-list li {
   display: grid;
-  grid-template-columns: 1.2fr 1fr auto auto;
+  grid-template-columns: 1fr auto;
   gap: 0.75rem;
   align-items: center;
   padding: 0.7rem 0;
@@ -833,6 +879,62 @@ textarea:focus {
 
 .recent-list li:last-child {
   border-bottom: none;
+}
+
+.recent-list li.recent-empty {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* The initials chip earns its width only in the narrow layout, where it
+   is the fastest way to tell five rows apart. */
+.recent-avatar {
+  display: none;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: 0.66rem;
+  font-weight: 600;
+}
+
+.recent-main {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 0.75rem;
+  align-items: baseline;
+  min-width: 0;
+}
+
+.recent-name,
+.recent-company {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recent-company {
+  color: var(--text-muted);
+}
+
+.recent-side {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.recent-date {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  white-space: nowrap;
 }
 
 .section-footer {
@@ -932,6 +1034,8 @@ textarea:focus {
     align-items: center;
     gap: 0.75rem;
     padding: 1rem;
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   }
 
   .sidebar-nav {
@@ -958,19 +1062,283 @@ textarea:focus {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .recent-list li {
+  /* Name over company instead of side by side — the row keeps its
+     avatar / detail / status rhythm, it just gets taller. */
+  .recent-main {
     grid-template-columns: 1fr;
-    gap: 0.25rem;
+    gap: 0.1rem;
   }
 }
 
-@media (max-width: 520px) {
-  .main-content {
-    padding: 1.25rem 1rem 2rem;
+/* ---- Mobile shell --------------------------------------------------
+   Below 640px the sidebar stops being one panel and becomes two fixed
+   rails: a 52px header carrying the brand and the session actions, and a
+   64px tab bar pinned to the bottom edge, where thumbs already are. That
+   replaces the hamburger — navigation is always one tap away — and it
+   leaves the page a clean scrolling column between them. Page-specific
+   buttons go in .page-header-actions, never in the bars, so no page has
+   to negotiate for room with the shell. */
+@media (max-width: 640px) {
+  .app-layout {
+    padding-top: var(--topbar-h);
+    padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px));
   }
 
-  .stats-row,
+  .sidebar {
+    position: fixed;
+    inset: 0 0 auto 0;
+    height: var(--topbar-h);
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 0.625rem;
+    padding: 0 max(0.875rem, env(safe-area-inset-right, 0px)) 0
+      max(0.875rem, env(safe-area-inset-left, 0px));
+    z-index: 30;
+  }
+
+  .sidebar .brand-lockup {
+    gap: 0.5rem;
+    padding: 0;
+    min-width: 0;
+  }
+
+  .sidebar .logo-10x {
+    width: 58px;
+  }
+
+  .sidebar .brand-lockup .brand-suffix {
+    font-size: 0.8rem;
+    padding-left: 0.5rem;
+  }
+
+  /* The header's action rail. Extra buttons a page needs up here stay
+     44px tall and never push the brand off the row. */
+  .sidebar-actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.375rem;
+    margin: 0;
+    flex: none;
+  }
+
+  .sidebar-actions .btn {
+    min-height: 44px;
+    padding: 0 0.7rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+  }
+
+  /* Auto columns, so a fourth destination later needs no new CSS. */
+  .sidebar-nav {
+    position: fixed;
+    inset: auto 0 0 0;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    height: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: var(--sidebar-bg);
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    z-index: 30;
+  }
+
+  .sidebar-nav a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-radius: 0;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* Active tab marks its top edge — the bottom bar's answer to the
+     rail's left edge marker. */
+  .sidebar-nav a.active::before {
+    inset: 0 0 auto 0;
+    width: auto;
+    height: 2px;
+  }
+
+  .main-content {
+    padding: 0.875rem;
+  }
+
+  /* Toasts clear the header rather than covering the brand. */
+  .toast-container {
+    top: calc(var(--topbar-h) + 0.5rem);
+  }
+
+  .page-header {
+    flex-wrap: nowrap;
+    gap: 0.625rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.6rem;
+  }
+
+  .page-header h1 {
+    font-size: 1.25rem;
+    min-width: 0;
+  }
+
+  .page-header-actions {
+    flex-wrap: nowrap;
+    gap: 0.375rem;
+    margin-left: auto;
+    flex: none;
+  }
+
+  .page-header-actions .btn {
+    min-height: 44px;
+    white-space: nowrap;
+  }
+
+  /* ---- Dashboard: everything above the fold, nothing scrolled ---- */
+  .welcome-bar {
+    gap: 0.625rem;
+    margin-bottom: 0.6rem;
+    padding-bottom: 0.45rem;
+  }
+
+  .welcome-bar h1 {
+    font-size: 1.1rem;
+  }
+
+  .live-clock {
+    font-size: 0.66rem;
+    white-space: nowrap;
+  }
+
+  .stats-row {
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .stat-card {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .stat-card .label {
+    font-size: 0.68rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .stat-card .value {
+    font-size: 1.4rem;
+  }
+
+  .section-block {
+    padding: 0.75rem 0.8rem;
+    margin-bottom: 0.6rem;
+  }
+
+  /* The column already ends in the tab bar's clearance — a trailing
+     margin here is the difference between fitting the fold and not. */
+  .section-block:last-child {
+    margin-bottom: 0;
+  }
+
+  .section-block h2 {
+    font-size: 0.68rem;
+    margin-bottom: 0.625rem;
+  }
+
+  /* Four tall tiles cost more height than they are worth on a phone;
+     bars compare the stages in a quarter of the space. */
   .pipeline-row {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .pipeline-item {
+    display: grid;
+    grid-template-columns: 66px 1fr 26px;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    text-align: left;
+  }
+
+  .pipeline-item .bar {
+    display: block;
+  }
+
+  .pipeline-item .label {
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+  }
+
+  .pipeline-item .count {
+    order: 0;
+    font-size: 0.82rem;
+    font-weight: 500;
+    text-align: right;
+  }
+
+  .recent-list li {
+    grid-template-columns: auto 1fr auto;
+    gap: 0.625rem;
+    padding: 0.25rem 0;
+  }
+
+  .recent-avatar {
+    display: grid;
+  }
+
+  .recent-name {
+    font-size: 0.82rem;
+    font-weight: 500;
+  }
+
+  .recent-company {
+    font-size: 0.68rem;
+  }
+
+  .recent-side {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.2rem;
+  }
+
+  .recent-date {
+    font-size: 0.66rem;
+  }
+
+  .section-footer {
+    margin-top: 0.25rem;
+  }
+
+  .section-footer a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  /* ---- Clients toolbar ------------------------------------------- */
+  .toolbar {
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  /* dvh, so the modal is not cropped by the browser's collapsing chrome. */
+  .modal-backdrop {
+    padding: 0.75rem;
+  }
+
+  .modal {
+    max-height: calc(100dvh - 1.5rem);
   }
 }

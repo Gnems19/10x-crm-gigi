@@ -17,6 +17,12 @@
 
   --transition: 160ms cubic-bezier(0.2, 0, 0, 1);
 
+  /* Mobile shell rails. Below 640px the sidebar splits into a fixed
+     header and a bottom tab bar; anything that pins itself to a viewport
+     edge (toasts, sticky rows) measures against these. */
+  --topbar-h: 52px;
+  --tabbar-h: 64px;
+
   /* Brand purple is constant across both themes. */
   --brand: #7250fc;
   --brand-bright: #8a6dff;

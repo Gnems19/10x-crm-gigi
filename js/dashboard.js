@@ -21,6 +21,8 @@ function computeStats(clients) {
   return { total, activeDeals, wonRevenue, newThisWeek };
 }
 
+const PIPELINE_STAGES = ['Lead', 'Contacted', 'Won', 'Lost'];
+
 function computePipeline(clients) {
   return {
     Lead: clients.filter((c) => c.status === 'Lead').length,
@@ -28,6 +30,19 @@ function computePipeline(clients) {
     Won: clients.filter((c) => c.status === 'Won').length,
     Lost: clients.filter((c) => c.status === 'Lost').length,
   };
+}
+
+function renderPipeline(pipeline) {
+  // Bars are scaled to the biggest stage, not to the total, so the shape
+  // of the funnel still reads when every count is small.
+  const max = Math.max(1, ...PIPELINE_STAGES.map((stage) => pipeline[stage]));
+
+  PIPELINE_STAGES.forEach((stage) => {
+    const key = stage.toLowerCase();
+    document.getElementById(`pipe-${key}`).textContent = String(pipeline[stage]);
+    document.getElementById(`pipe-${key}-bar`).style.width =
+      `${(pipeline[stage] / max) * 100}%`;
+  });
 }
 
 function renderDashboard(clients) {
@@ -39,10 +54,7 @@ function renderDashboard(clients) {
   document.getElementById('stat-revenue').textContent = formatDealValue(stats.wonRevenue);
   document.getElementById('stat-new').textContent = String(stats.newThisWeek);
 
-  document.getElementById('pipe-lead').textContent = String(pipeline.Lead);
-  document.getElementById('pipe-contacted').textContent = String(pipeline.Contacted);
-  document.getElementById('pipe-won').textContent = String(pipeline.Won);
-  document.getElementById('pipe-lost').textContent = String(pipeline.Lost);
+  renderPipeline(pipeline);
 
   const recent = [...clients]
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
@@ -52,17 +64,22 @@ function renderDashboard(clients) {
   list.innerHTML = '';
 
   if (!recent.length) {
-    list.innerHTML = '<li class="note-date">No clients yet.</li>';
+    list.innerHTML = '<li class="recent-empty">No clients yet.</li>';
     return;
   }
 
   recent.forEach((client) => {
     const li = document.createElement('li');
     li.innerHTML = `
-      <span>${escapeHtml(client.name)}</span>
-      <span>${escapeHtml(client.company || '—')}</span>
-      <span class="badge ${statusBadgeClass(client.status)}">${client.status}</span>
-      <span>${new Date(client.createdAt).toLocaleDateString()}</span>
+      <span class="recent-avatar" aria-hidden="true">${escapeHtml(getInitials(client.name))}</span>
+      <span class="recent-main">
+        <span class="recent-name">${escapeHtml(client.name)}</span>
+        <span class="recent-company">${escapeHtml(client.company || '—')}</span>
+      </span>
+      <span class="recent-side">
+        <span class="badge ${statusBadgeClass(client.status)}">${client.status}</span>
+        <span class="recent-date">${new Date(client.createdAt).toLocaleDateString()}</span>
+      </span>
     `;
     list.appendChild(li);
   });
